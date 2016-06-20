@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <title>Domus</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+    <link rel="stylesheet" href="../node_modules/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="assets/app.css"/>
+
+    <style type="text/css">
+        /**
+         * Hide when Angular is not yet loaded and initialized
+         */
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+          display: none !important;
+        }
+    </style>
+
+  </head>
+
+  <body ng-app="starterApp" layout="column" ng-controller="DomusController as domus" ng-cloak>
+
+    <md-toolbar layout="row">
+      <md-button class="menu" hide-gt-sm ng-click="domus.toggleList()" aria-label="Pièces">
+        <md-icon md-svg-icon="menu" ></md-icon>
+      </md-button>
+      <h1>Domus</h1>
+    </md-toolbar>
+
+    <div flex layout="row">
+
+        <md-sidenav ng-click="domus.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
+          <md-list>
+            <md-list-item ng-repeat="piece in domus.pieces">
+                <md-button ng-click="domus.selectPiece(piece)" ng-class="{'selected' : piece === domus.selected }">
+                  
+                  {{piece.libelle}}
+                </md-button>
+            </md-list-item>
+          </md-list>
+        </md-sidenav>
+
+        <md-content flex id="content">
+          
+            <h3>{{domus.selectedPiece.libelle}}</h3>
+            
+            <div flex layout="row" ng-repeat="appareil in domus.appareils|filter:{code_piece:domus.selectedPiece.code_piece}">     
+                  <md-slider-container flex>
+                    <h4>{{appareil.libelle}}</h4>
+                    <md-slider ng-model="appareil.pourcentage_final" min="0" max="100" aria-label="{{appareil.libelle}}" id="{{appareil.code_appareil}}-slider" class="md-accent" md-vertical
+                               step="10"></md-slider>
+                    </md-slider>
+                     <md-input-container>
+                        <input type="number" ng-model="appareil.pourcentage_final" aria-label="{{appareil.libelle}}" aria-controls="{{appareil.code_appareil}}-slider" disabled>
+                    </md-input-container>
+                  </md-slider-container>
+            </div>
+            
+            </md-content>
+
+        <md-bottom-sheet class="md-list" layout="row" layout-align="center center" ng-cloak>
+          <md-content>
+              <md-button
+                  ng-click=""
+                  class="md-list-item-content" >
+                <md-icon md-svg-src="../assets/openAll.png"></md-icon>
+                <span class="md-inline-list-icon-label">Tout ouvrir</span>
+              </md-button>
+              <md-button
+                  ng-click=""
+                  class="md-list-item-content" >
+                <md-icon md-svg-src="../assets/closeAll.png"></md-icon>
+                <span class="md-inline-list-icon-label">Tout fermer</span>
+              </md-button>
+        </md-content>
+        </md-bottom-sheet>
+
+    </div>
+
+    <script src="../node_modules/angular/angular.js"></script>
+    <script src="../node_modules/angular-animate/angular-animate.js"></script>
+    <script src="../node_modules/angular-aria/angular-aria.js"></script>
+    <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
+
+    <script src="./src/domus/Domus.js"></script>
+    <script src="./src/domus/DomusController.js"></script>
+    <script src="./src/domus/DomusService.js"></script>
+
+    <script type="text/javascript">
+
+          var app = angular
+              .module('starterApp', ['ngMaterial', 'domus'])
+              .config(function($mdThemingProvider, $mdIconProvider){
+
+                  $mdIconProvider
+                      .defaultIconSet("./assets/svg/avatars.svg", 128)
+                      .icon("menu"       , "./assets/svg/menu.svg"        , 24)
+                      .icon("share"      , "./assets/svg/share.svg"       , 24)
+                      .icon("google_plus", "./assets/svg/google_plus.svg" , 512)
+                      .icon("hangouts"   , "./assets/svg/hangouts.svg"    , 512)
+                      .icon("twitter"    , "./assets/svg/twitter.svg"     , 512)
+                      .icon("phone"      , "./assets/svg/phone.svg"       , 512);
+
+                      $mdThemingProvider.theme('default')
+                          .primaryPalette('light-green')
+                          .accentPalette('orange');
+
+              });
+
+    </script>
+
+  </body>
+</html>
